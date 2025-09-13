@@ -599,22 +599,12 @@ class OpenPMDPulse(LaserPulse):
 
     Parameters
     ----------
-    path : str
-        Path to the openPMD file or folder containing the laser data.
+    file_name : str
+        See docs. FromOpenPMDProfile.
     iteration : int
-        Iteration at which to read the laser pulse.
-    field : str, optional
-        Name of the field containing the laser pulse. By default `'E'`.
-    coord : string, optional
-        Coordinate of the field containing the laser pulse.. By default `'x'`.
-    prefix : string, optional
-        Prefix of the openPMD file from which the envelope is read.
-        Only used when envelope=True.
-        The provided iteration is read from <path>/<prefix>_%T.h5.
-    theta : float or None, optional
-        Only used if the openPMD input is in thetaMode geometry.
-        The angle of the plane of observation, with respect to the x axis.
-        By default `0`.
+        See docs. FromOpenPMDProfile.
+    envelope_name : str, optional
+        See docs. FromOpenPMDProfile.
     smooth_edges : bool, optional
         Whether to smooth the edges of the laser profile along `r` using a
         super-Gaussian function of power 8. This is useful when the laser
@@ -647,12 +637,9 @@ class OpenPMDPulse(LaserPulse):
 
     def __init__(
         self,
-        path: str,
+        file_name: str,
         iteration: int,
-        field: Optional[str] = "E",
-        coord: Optional[str] = "x",
-        prefix: Optional[str] = None,
-        theta: Optional[float] = 0.0,
+        envelope_name: Optional[str] = None,
         smooth_edges: Optional[bool] = False,
         apply_gaussian_filter: Optional[bool] = False,
         gaussian_filter_sigma: Optional[Union[int, float, Iterable]] = (5, 0),
@@ -662,13 +649,9 @@ class OpenPMDPulse(LaserPulse):
             "You can do so with `pip install lasy`."
         )
         self.lasy_profile = FromOpenPMDProfile(
-            path=path,
+            file_name=file_name,
             iteration=iteration,
-            pol=(1, 0),  # dummy value, currently not needed
-            field=field,
-            coord=coord,
-            prefix=prefix,
-            theta=theta,
+            envelope_name=envelope_name
         )
         super().__init__(self.lasy_profile.lambda0, "linear")
         self._smooth_edges = smooth_edges
